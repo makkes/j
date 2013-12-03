@@ -1,5 +1,6 @@
 _j() {
   COMPL=`jump --complete "${COMP_WORDS[COMP_CWORD]}"`
+  IFS=$'\n'
   COMPREPLY=($COMPL)
   return 0
 }
