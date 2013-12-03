@@ -1,0 +1,114 @@
+#!/usr/bin/env python3
+
+import os
+import pickle
+import re
+from collections import Counter
+from datetime import datetime
+
+DATFILE = os.getenv('HOME') + '/.jump.dat'
+LOGFILE = os.getenv('HOME') + '/.jump.log'
+SPECIALDIRS = ['.', '..']
+
+
+def log(msg):
+    f = open(LOGFILE, 'a')
+    f.write(str(datetime.today()) + ': ' + str(msg))
+    f.write('\n')
+
+
+def write_history(obj):
+    f = open(DATFILE, 'wb')
+    pickle.dump(obj, f)
+    f.close()
+
+
+def read_history():
+    if not os.path.exists(DATFILE):
+        return Counter()
+    f = open(DATFILE, 'rb')
+    obj = pickle.load(f)
+    f.close()
+    return obj
+
+
+def sort_history(history):
+    return sorted(history.items(), key=lambda e: e[1], reverse=True)
+
+
+def find_dir(pattern, history, multiple):
+    p = re.compile(pattern)
+    for d, cnt in sort_history(history):
+        if(p.search(d)):
+            yield d
+
+
+def strip_common_prefix(l):
+    if len(l) <= 1:
+        return l
+    prefixlen = len(os.path.commonprefix(l))
+    return list(map(lambda s:
+                    s[prefixlen:]
+                    if len(s[prefixlen:]) > 0
+                    else s,
+                    l))
+
+
+def strip_leading_slash(l):
+    if len(l) <= 1:
+        return l
+    return list(map(lambda s: s.lstrip('/'), l))
+
+
+def canonicalize(name, history, multiple):
+    if not multiple:
+        try:
+            os.chdir(name)
+            return os.getcwd()
+        except OSError:
+            pass
+    if not name in SPECIALDIRS:
+        ret = []
+        for found in find_dir(name, history, multiple):
+            if(multiple):
+                ret.append(found)
+            else:
+                return found
+        return ' '.join(strip_leading_slash(strip_common_prefix(ret))) or name
+    return name
+
+
+def find_best_dir(d):
+    history = read_history()
+    canonical_dir = canonicalize(d, history, False)
+    history[canonical_dir] += 1
+    write_history(history)
+    return canonical_dir
+
+
+def complete(d):
+    print(canonicalize(d, read_history(), True))
+
+
+def dump():
+    history = read_history()
+    width = len(str(history.most_common(1)[0][1]))
+    for directory, count in sort_history(history):
+        print("{:{width}} {}".format(count, directory, width=width))
+
+
+if __name__ == '__main__':
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] == '--complete':
+        log(sys.argv)
+        complete(len(sys.argv) > 2 and sys.argv[2] or '')
+        exit(0)
+    elif len(sys.argv) > 1 and sys.argv[1] == '--dump':
+        dump()
+        exit(0)
+    try:
+        dir = find_best_dir(
+            len(sys.argv) > 1 and sys.argv[1] or os.getenv("HOME"))
+        print(dir)
+    except:
+        log(sys.exc_info()[0])

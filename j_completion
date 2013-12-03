@@ -1,0 +1,7 @@
+_j() {
+  COMPL=`jump --complete "${COMP_WORDS[COMP_CWORD]}"`
+  COMPREPLY=($COMPL)
+  return 0
+}
+
+complete -o dirnames -F _j j
