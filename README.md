@@ -36,8 +36,10 @@ Requirements
 Installation
 ===
 
-1. Copy the file 'jump' to somewhere in your `PATH` like `/usr/local/bin`.
-1. Add this line to your `.bashrc` (replace '/PATH/TO/' with the real path to `j.sh`):
+1. Copy the files 'jump' and 'jump.py' to somewhere in your `PATH` like
+   `/usr/local/bin`.
+1. Add this line to your `.bashrc` (replace '/PATH/TO/' with the real path to
+   `j.sh`):
    source /PATH/TO/j.sh
 1. If you want tab completion, copy the file `j_completion` to
    `/etc/bash_completion.d/` or wherever your distribution searches for the
