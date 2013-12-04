@@ -64,6 +64,10 @@ def strip_leading_slash(l):
     return list(map(lambda s: s.lstrip('/'), l))
 
 
+def only_special_dirs(name):
+    return re.compile('^[./]+$').match(name) is not None
+
+
 def canonicalize(name, history, multiple):
     if not multiple:
         try:
@@ -71,7 +75,7 @@ def canonicalize(name, history, multiple):
             return os.getcwd()
         except OSError:
             pass
-    if not name in SPECIALDIRS:
+    if not only_special_dirs(name):
         ret = []
         for found in find_dir(name, history, multiple):
             if(multiple):
@@ -79,7 +83,7 @@ def canonicalize(name, history, multiple):
             else:
                 return found
         return strip_leading_slash(strip_common_prefix(ret))
-    return name
+    return [name] if multiple else name
 
 
 def find_best_dir(d):
