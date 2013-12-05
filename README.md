@@ -45,6 +45,14 @@ Installation
    `/etc/bash_completion.d/` or wherever your distribution searches for the
    completion scripts.
 
+Usage
+===
+
+* Just use `j` whenever you used to invoke `cd`. One difference you have to be
+  aware of is that pressing TAB twice after typing `j ` will not give you
+  completions for directories in the current working dir as `cd` does.
+* If you want to see the data that j has stored so far, invoke `jump --dump`
+
 "Why the heck are you doing this? There's autojump, z, ..."
 ===
 
