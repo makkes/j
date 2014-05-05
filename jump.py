@@ -39,7 +39,6 @@ def sort_history(history):
 def delete_entry(entry):
     print('deleting "' + entry + '"')
     history = read_history()
-    print(history)
     del history[entry]
     write_history(history)
 
@@ -79,8 +78,16 @@ def only_special_dirs(name):
 def find_candidates(name, history, canonical):
     try:
         # a directory that is reachable via 'name' has precedence
+        islink = os.path.islink(name)
+        oldcwd = os.getcwd()
         os.chdir(name)
-        return [os.getcwd()]
+        cwd = os.getcwd()
+        # return to the previous directory so completion works upon continuous
+        # calls to this function
+        os.chdir(oldcwd)
+        # if we followed a symlink, return that, else return the CWD
+        return [cwd if not islink else
+                os.path.join(os.path.split(cwd)[0], name)]
     except OSError:
         # a directory 'name' doesn't exist so carry on
         pass
