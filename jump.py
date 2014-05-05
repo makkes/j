@@ -47,7 +47,7 @@ def delete_entry(entry):
 def find_dir(pattern, history):
     p = re.compile(pattern)
     for d, cnt in sort_history(history):
-        if(p.search(d)):
+        if p.search(d) and os.path.exists(d):
             yield d
 
 
