@@ -10,6 +10,21 @@ if len(sys.argv) > 1 and sys.argv[1] == '--complete':
 elif len(sys.argv) > 1 and sys.argv[1] == '--dump':
     jump.dump()
     exit(0)
+elif len(sys.argv) > 1 and sys.argv[1] == '--help':
+    print("""
+Usage: jump [OPTION|STR]
+
+J - directory jumping for the lazy
+
+If called without an OPTION, J will print out the best match for STR and
+update its database.
+
+    --complete STR      Complete STR and show all possible entries that match.
+                        This option does not update J's database.
+    --dump              Dump J's complete database including usage counts.
+    --delete STR        Delete the entry identified by STR from J's database.
+    """)
+    exit(0)
 elif len(sys.argv) > 2 and sys.argv[1] == '--delete':
     jump.delete_entry(sys.argv[2])
     exit(0)
