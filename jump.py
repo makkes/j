@@ -3,10 +3,11 @@
 import os
 import pickle
 import re
+import json
 from collections import Counter
 from datetime import datetime
 
-DATFILE = os.getenv('HOME') + '/.jump.dat'
+JSONFILE = os.getenv('HOME') + '/.jump.json'
 LOGFILE = os.getenv('HOME') + '/.jump.log'
 SPECIALDIRS = ['.', '..']
 
@@ -17,23 +18,36 @@ def log(msg):
     f.write('\n')
 
 
+def migrate_old_history():
+    OLD_DATFILE = os.getenv('HOME') + '/.jump.dat'
+    if not os.path.exists(OLD_DATFILE):
+        return
+    f = open(OLD_DATFILE, 'rb')
+    obj = pickle.load(f)
+    f.close()
+    os.remove(OLD_DATFILE)
+    write_history(obj)
+
+
 def write_history(obj):
-    f = open(DATFILE, 'wb')
-    pickle.dump(obj, f)
+    f = open(JSONFILE, 'w', encoding="utf-8")
+    f.write(json.dumps(obj))
     f.close()
 
 
 def read_history():
-    if not os.path.exists(DATFILE):
+    migrate_old_history()
+
+    if not os.path.exists(JSONFILE):
         return Counter()
-    f = open(DATFILE, 'rb')
-    obj = pickle.load(f)
+    f = open(JSONFILE, 'r', encoding="utf-8")
+    history = Counter(json.load(f, encoding="utf-8"))
     f.close()
-    return obj
+    return history
 
 
-def sort_history(history):
-    return sorted(history.items(), key=lambda e: e[1], reverse=True)
+def sort_history(history, reverse):
+    return sorted(history.items(), key=lambda e: e[1], reverse=reverse)
 
 
 def delete_entry(entry):
@@ -45,7 +59,7 @@ def delete_entry(entry):
 
 def find_dir(pattern, history):
     p = re.compile(pattern)
-    for d, cnt in sort_history(history):
+    for d, cnt in sort_history(history, True):
         if p.search(d) and os.path.exists(d):
             yield d
 
@@ -97,7 +111,7 @@ def find_candidates(name, history, canonical):
             candidates.append(found)
         if not canonical:
             candidates = strip_leading_slash(strip_common_prefix(candidates))
-        return sorted(candidates, key=lambda e: e.count('/'))
+        return candidates
     return [name]
 
 
@@ -122,8 +136,8 @@ def complete(d):
     print("\n".join(res))
 
 
-def dump():
+def dump(reverse):
     history = read_history()
     width = len(str(history.most_common(1)[0][1]))
-    for directory, count in sort_history(history):
+    for directory, count in sort_history(history, reverse):
         print("{:{width}} {}".format(count, directory, width=width))
