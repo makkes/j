@@ -31,7 +31,7 @@ def migrate_old_history():
 
 def write_history(obj):
     f = open(JSONFILE, 'w', encoding="utf-8")
-    f.write(json.dumps(obj))
+    f.write(json.dumps(obj, indent=4))
     f.close()
 
 
