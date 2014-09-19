@@ -27,6 +27,11 @@ If I go to the directories `/home/makkes/Documents` and `/home/makkes/Music`
 very often then I enter `j D` for the first one and `j M` for the latter one.
 Patterns such as `j oc`, `j Doc`, `j usic` would also work.
 
+Exact matches are always ranked above all others. So if you have
+`/home/makkes/Doc` and `/home/makkes/Documents` in J's database, entering `j
+Doc` will always lead you to `/home/makkes/Doc`, even if you jumped to the
+`Documents` directory more often.
+
 Requirements
 ===
 
