@@ -46,8 +46,15 @@ def read_history():
     return history
 
 
-def sort_history(history, reverse):
-    return sorted(history.items(), key=lambda e: e[1], reverse=reverse)
+def history_sorter(pattern):
+    stripped_pattern = pattern.lstrip("/")
+    def key_func(element):
+        return int(element[0].split("/")[-1] == stripped_pattern), element[1]
+    return key_func
+
+
+def sort_history(pattern, history, reverse):
+    return sorted(history.items(), key=history_sorter(pattern), reverse=reverse)
 
 
 def delete_entry(entry):
@@ -59,7 +66,7 @@ def delete_entry(entry):
 
 def find_dir(pattern, history):
     p = re.compile(pattern)
-    for d, cnt in sort_history(history, True):
+    for d, cnt in sort_history(pattern, history, True):
         if p.search(d) and os.path.exists(d):
             yield d
 
@@ -91,7 +98,7 @@ def only_special_dirs(name):
 
 def find_candidates(name, history, canonical):
     try:
-        # a directory that is reachable via 'name' has precedence
+        # a directory that is reachable from CWD via 'name' has precedence
         islink = os.path.islink(name)
         oldcwd = os.getcwd()
         os.chdir(name)
