@@ -146,5 +146,5 @@ def complete(d):
 def dump(reverse):
     history = read_history()
     width = len(str(history.most_common(1)[0][1]))
-    for directory, count in sort_history(history, reverse):
+    for directory, count in sort_history("", history, reverse):
         print("{:{width}} {}".format(count, directory, width=width))
