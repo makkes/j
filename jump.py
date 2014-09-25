@@ -48,13 +48,15 @@ def read_history():
 
 def history_sorter(pattern):
     stripped_pattern = pattern.lstrip("/")
+
     def key_func(element):
         return int(element[0].split("/")[-1] == stripped_pattern), element[1]
     return key_func
 
 
 def sort_history(pattern, history, reverse):
-    return sorted(history.items(), key=history_sorter(pattern), reverse=reverse)
+    return sorted(history.items(), key=history_sorter(pattern),
+                  reverse=reverse)
 
 
 def delete_entry(entry):
@@ -99,16 +101,17 @@ def only_special_dirs(name):
 def find_candidates(name, history, canonical):
     try:
         # a directory that is reachable from CWD via 'name' has precedence
-        islink = os.path.islink(name)
-        oldcwd = os.getcwd()
-        os.chdir(name)
-        cwd = os.getcwd()
-        # return to the previous directory so completion works upon continuous
-        # calls to this function
-        os.chdir(oldcwd)
-        # if we followed a symlink, return that, else return the CWD
-        return [cwd if not islink else
-                os.path.join(os.path.split(cwd)[0], name)]
+        if not name.startswith("/"):
+            islink = os.path.islink(name)
+            oldcwd = os.getcwd()
+            os.chdir(name)
+            cwd = os.getcwd()
+            # return to the previous directory so completion works upon
+            # continuous calls to this function
+            os.chdir(oldcwd)
+            # if we followed a symlink, return that, else return the CWD
+            return [cwd if not islink else
+                    os.path.join(os.path.split(cwd)[0], name)]
     except OSError:
         # a directory 'name' doesn't exist so carry on
         pass
