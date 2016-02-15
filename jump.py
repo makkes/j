@@ -50,7 +50,9 @@ def history_sorter(pattern):
     stripped_pattern = pattern.lstrip("/")
 
     def key_func(element):
-        return int(element[0].split("/")[-1] == stripped_pattern), element[1]
+        return int(
+            element[0].lstrip("/") == stripped_pattern or
+            element[0].split("/")[-1] == stripped_pattern), element[1]
     return key_func
 
 
@@ -101,17 +103,17 @@ def only_special_dirs(name):
 def find_candidates(name, history, canonical):
     try:
         # a directory that is reachable from CWD via 'name' has precedence
-        if not name.startswith("/"):
-            islink = os.path.islink(name)
-            oldcwd = os.getcwd()
-            os.chdir(name)
-            cwd = os.getcwd()
-            # return to the previous directory so completion works upon
-            # continuous calls to this function
-            os.chdir(oldcwd)
-            # if we followed a symlink, return that, else return the CWD
-            return [cwd if not islink else
-                    os.path.join(os.path.split(cwd)[0], name)]
+        islink = os.path.islink(name)
+        oldcwd = os.getcwd()
+        os.chdir(name)
+        cwd = os.getcwd()
+        #cwd = os.getcwd()
+        # return to the previous directory so completion works upon
+        # continuous calls to this function
+        os.chdir(oldcwd)
+        # if we followed a symlink, return that, else return the CWD
+        return [cwd if not islink else
+                os.path.join(oldcwd, name)]
     except OSError:
         # a directory 'name' doesn't exist so carry on
         pass
