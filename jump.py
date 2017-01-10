@@ -107,7 +107,6 @@ def find_candidates(name, history, canonical):
         oldcwd = os.getcwd()
         os.chdir(name)
         cwd = os.getcwd()
-        #cwd = os.getcwd()
         # return to the previous directory so completion works upon
         # continuous calls to this function
         os.chdir(oldcwd)
