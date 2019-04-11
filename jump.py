@@ -52,7 +52,8 @@ def history_sorter(pattern):
     def key_func(element):
         return int(
             element[0].lstrip("/") == stripped_pattern or
-            element[0].split("/")[-1] == stripped_pattern), element[1]
+            element[0].split("/")[-1] == stripped_pattern or
+            element[0].endswith(stripped_pattern)), element[1]
     return key_func
 
 
