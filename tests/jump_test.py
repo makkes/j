@@ -23,7 +23,7 @@ def sort_history_prefers_suffix_match_test():
     res = jump.sort_history("/max", history, True)
     assert res[0][0] == "/home/max"
     res = jump.sort_history("e/max", history, True)
-    assert res[0][0] == "/home/max/dev/boplish/core"
+    assert res[0][0] == "/home/max"
 
 
 def sort_history_test():
