@@ -4,6 +4,16 @@ set -euo pipefail
 
 DEST_BASE=~/.j
 
+BASH_PROFILE=
+if [[ -w ~/.bashrc ]] ; then
+    BASH_PROFILE=~/.bashrc
+elif [[ -w ~/.bash_profile ]] ; then
+    BASH_PROFILE=~/.bash_profile
+else
+    echo no bash profile found
+    exit 1
+fi
+
 if [[ -d $DEST_BASE ]] ; then
     echo j is already installed in $DEST_BASE
     exit 1
@@ -15,18 +25,17 @@ curl -s -L -o /tmp/j.tar.gz https://github.com/makkes/j/releases/download/v1.0.0
 mkdir ~/.j
 tar -C ~/.j -xzf /tmp/j.tar.gz
 
-BASH_PROFILE=
-if [[ -w ~/.bashrc ]] ; then
-    BASH_PROFILE=~/.bashrc
-elif [[ -w ~/.bash_profile ]] ; then
-    BASH_PROFILE=~/.bash_profile
+if [[ ! $(grep -qc '/.j/j.sh' ${BASH_PROFILE}) ]] ; then
+    echo "j source string already in ${BASH_PROFILE}"
 else
-    echo no bash profile found
-    exit 1
+    echo "source $DEST_BASE/j.sh" >> $BASH_PROFILE
 fi
 
-echo "source $DEST_BASE/j.sh" >> $BASH_PROFILE
+if [[ ! $(grep -qc '/.j/j_completion' ${BASH_PROFILE}) ]] ; then
+    echo "bash completion string already in ${BASH_PROFILE}"
+else
 echo "source $DEST_BASE/j_completion" >> $BASH_PROFILE
+fi
 
 echo j has been installed to $DEST_BASE.
 echo
