@@ -3,5 +3,5 @@
 function j() {
     JUMPCMD=jump
     DIR=`${JUMPCMD} "$@"`
-    builtin cd $DIR
+    builtin cd "$DIR"
 }
