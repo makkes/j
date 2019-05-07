@@ -1,5 +1,5 @@
 _j() {
-  COMPL=`jump --complete "${COMP_WORDS[COMP_CWORD]}"`
+  COMPL=`~/.j/jump --complete "${COMP_WORDS[COMP_CWORD]}"`
   local IFS=$'\n'
   COMPREPLY=($COMPL)
   return 0
