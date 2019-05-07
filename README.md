@@ -41,14 +41,15 @@ Requirements
 Installation
 ===
 
-1. Copy the files 'jump' and 'jump.py' to somewhere in your `PATH` like
-   `/usr/local/bin`.
-1. Add this line to your `.bashrc` (replace '/PATH/TO/' with the real path to
-   `j.sh`):
-   source /PATH/TO/j.sh
-1. If you want tab completion, copy the file `j_completion` to
-   `/etc/bash_completion.d/` or wherever your distribution searches for the
-   completion scripts.
+```sh
+curl -o- https://raw.githubusercontent.com/makkes/j/v1.0.0/j.sh | bash
+```
+
+or
+
+```sh
+wget -qO- https://raw.githubusercontent.com/makkes/j/v1.0.0/j.sh | bash
+```
 
 Usage
 ===
