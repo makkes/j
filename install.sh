@@ -21,7 +21,7 @@ fi
 
 echo Downloading j release bundle...
 
-curl -s -L -o /tmp/j.tar.gz https://github.com/makkes/j/releases/download/v1.0.0/j-v1.0.0.tar.gz
+curl -s -L -o /tmp/j.tar.gz https://github.com/makkes/j/releases/download/v1.0.2/j-v1.0.2.tar.gz
 mkdir ~/.j
 tar -C ~/.j -xzf /tmp/j.tar.gz
 
