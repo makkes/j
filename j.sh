@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function j() {
-    JUMPCMD=jump
+    JUMPCMD=~/.j/jump
     DIR=`${JUMPCMD} "$@"`
     builtin cd "$DIR"
 }
