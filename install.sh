@@ -9,7 +9,9 @@ if [[ -d $DEST_BASE ]] ; then
     exit 1
 fi
 
-curl -L -o /tmp/j.tar.gz https://github.com/makkes/j/releases/download/v1.0.0/j-v1.0.0.tar.gz
+echo Downloading j release bundle...
+
+curl -s -L -o /tmp/j.tar.gz https://github.com/makkes/j/releases/download/v1.0.0/j-v1.0.0.tar.gz
 mkdir ~/.j
 tar -C ~/.j -xzf /tmp/j.tar.gz
 
@@ -26,3 +28,6 @@ fi
 echo "source $DEST_BASE/j.sh" >> $BASH_PROFILE
 echo "source $DEST_BASE/j_completion" >> $BASH_PROFILE
 
+echo j has been installed to $DEST_BASE.
+echo
+echo Close and reopen your terminal to start using j.
