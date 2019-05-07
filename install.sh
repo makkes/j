@@ -9,7 +9,7 @@ if [[ -d $DEST_BASE ]] ; then
     exit 1
 fi
 
-curl -L -o /tmp/j.tar.gz https://github.com/makkes/j/releases/download/v1.0-rc1/j-v1.0.0-rc1.tar.gz
+curl -L -o /tmp/j.tar.gz https://github.com/makkes/j/releases/download/v1.0.0/j-v1.0.0.tar.gz
 mkdir ~/.j
 tar -C ~/.j -xzf /tmp/j.tar.gz
 
