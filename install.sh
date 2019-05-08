@@ -1,6 +1,22 @@
 #!/bin/bash
 
-set -euo pipefail
+set -uo pipefail
+
+function rollback_and_exit() {
+    if [[ -n $OLD_INST ]] ; then
+        echo "Cancelling upgrade and rolling back to old version..."
+        rm -rf $DEST_BASE
+        mv $OLD_INST $DEST_BASE
+    fi
+    exit $1
+}
+
+function cleanup_and_exit() {
+    if [[ -n $OLD_INST ]] ; then
+        rm -rf $OLD_INST
+    fi
+    exit $1
+}
 
 DEST_BASE=~/.j
 
@@ -14,29 +30,33 @@ else
     exit 1
 fi
 
+OLD_INST=
 if [[ -d $DEST_BASE ]] ; then
-    echo j is already installed in $DEST_BASE
-    exit 1
+    OLD_INST=~/.j-$(date +%s)
+    echo j is already installed in $DEST_BASE. Trying to replace it...
+    mv $DEST_BASE $OLD_INST || cleanup_and_exit 1
 fi
 
 echo Downloading j release bundle...
 
-curl -s -L -o /tmp/j.tar.gz https://github.com/makkes/j/releases/download/v1.0.2/j-v1.0.2.tar.gz
-mkdir ~/.j
-tar -C ~/.j -xzf /tmp/j.tar.gz
+curl -s -L -o /tmp/j.tar.gz https://github.com/makkes/j/releases/download/v1.0.2/j-v1.0.2.tar.gz || rollback_and_exit 1
+mkdir ~/.j || exit 1
+tar -C ~/.j -xzf /tmp/j.tar.gz || rollback_and_exit 1
 
 if [[ ! $(grep -qc '/.j/j.sh' ${BASH_PROFILE}) ]] ; then
     echo "j source string already in ${BASH_PROFILE}"
 else
-    echo "source $DEST_BASE/j.sh" >> $BASH_PROFILE
+    echo "source $DEST_BASE/j.sh" >> $BASH_PROFILE || rollback_and_exit 1
 fi
 
 if [[ ! $(grep -qc '/.j/j_completion' ${BASH_PROFILE}) ]] ; then
     echo "bash completion string already in ${BASH_PROFILE}"
 else
-echo "source $DEST_BASE/j_completion" >> $BASH_PROFILE
+echo "source $DEST_BASE/j_completion" >> $BASH_PROFILE || rollback_and_exit 1
 fi
 
 echo j has been installed to $DEST_BASE.
 echo
 echo Close and reopen your terminal to start using j.
+
+cleanup_and_exit 0
