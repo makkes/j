@@ -43,13 +43,13 @@ curl -s -L -o /tmp/j.tar.gz https://github.com/makkes/j/releases/download/v1.0.3
 mkdir ~/.j || exit 1
 tar -C ~/.j -xzf /tmp/j.tar.gz || rollback_and_exit 1
 
-if [[ ! $(grep -qc '/.j/j.sh' ${BASH_PROFILE}) ]] ; then
+if grep -qc '/.j/j.sh' ${BASH_PROFILE}; then
     echo "j source string already in ${BASH_PROFILE}"
 else
     echo "source $DEST_BASE/j.sh" >> $BASH_PROFILE || rollback_and_exit 1
 fi
 
-if [[ ! $(grep -qc '/.j/j_completion' ${BASH_PROFILE}) ]] ; then
+if grep -qc '/.j/j_completion' ${BASH_PROFILE}; then
     echo "bash completion string already in ${BASH_PROFILE}"
 else
 echo "source $DEST_BASE/j_completion" >> $BASH_PROFILE || rollback_and_exit 1
