@@ -42,13 +42,13 @@ Installation
 ===
 
 ```sh
-curl -o- https://raw.githubusercontent.com/makkes/j/v1.0.4/install.sh | bash
+curl -o- https://raw.githubusercontent.com/makkes/j/v1.0.5/install.sh | bash
 ```
 
 or
 
 ```sh
-wget -qO- https://raw.githubusercontent.com/makkes/j/v1.0.4/install.sh | bash
+wget -qO- https://raw.githubusercontent.com/makkes/j/v1.0.5/install.sh | bash
 ```
 
 Usage
