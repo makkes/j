@@ -5,17 +5,17 @@ set -uo pipefail
 function rollback_and_exit() {
     if [[ -n $OLD_INST ]] ; then
         echo "Cancelling upgrade and rolling back to old version..."
-        rm -rf $DEST_BASE
-        mv $OLD_INST $DEST_BASE
+        rm -rf "$DEST_BASE"
+        mv "$OLD_INST" "$DEST_BASE"
     fi
-    exit $1
+    exit "$1"
 }
 
 function cleanup_and_exit() {
     if [[ -n $OLD_INST ]] ; then
-        rm -rf $OLD_INST
+        rm -rf "$OLD_INST"
     fi
-    exit $1
+    exit "$1"
 }
 
 DEST_BASE=~/.j
@@ -34,12 +34,13 @@ OLD_INST=
 if [[ -d $DEST_BASE ]] ; then
     OLD_INST=~/.j-$(date +%s)
     echo j is already installed in $DEST_BASE. Trying to replace it...
-    mv $DEST_BASE $OLD_INST || cleanup_and_exit 1
+    mv "$DEST_BASE" "$OLD_INST" || cleanup_and_exit 1
 fi
 
 echo Downloading j release bundle...
 
-curl -s -L -o /tmp/j.tar.gz https://github.com/makkes/j/releases/download/v1.0.4/j-v1.0.4.tar.gz || rollback_and_exit 1
+version="v1.0.5"
+curl -s -L -o /tmp/j.tar.gz https://github.com/makkes/j/releases/download/${version}/j_${version}_"$(uname -o|awk '{print tolower($0)}')"_"$(uname -m)".tar.gz || rollback_and_exit 1
 mkdir ~/.j || exit 1
 tar -C ~/.j -xzf /tmp/j.tar.gz || rollback_and_exit 1
 
