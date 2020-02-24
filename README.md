@@ -8,7 +8,7 @@ given string and `cd`s the user into that directory.
 
 J does this by trying to find a match for the given command-line parameter in
 the list of recently visited directories. Those are ranked by your visiting
-frequency and thus the first match will lead to you being `cd` into that
+frequency and thus the first match will lead to you being `cd`d into that
 directory. For getting into the secondly ranked directory you have to be so
 specific that the first one does not match anymore.
 
@@ -36,7 +36,7 @@ Requirements
 ===
 
 * Bash
-* Python 3
+* Linux or macOS
 
 Installation
 ===
@@ -57,7 +57,6 @@ Usage
 * Just use `j` whenever you used to invoke `cd`. One difference you have to be
   aware of is that pressing TAB twice after typing `j ` will not give you
   completions for directories in the current working dir as `cd` does.
-* If you want to see the data that j has stored so far, invoke `jump --dump`
 
 "Why the heck are you doing this? There's autojump, z, ..."
 ===
