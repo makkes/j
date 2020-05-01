@@ -39,7 +39,7 @@ fi
 
 echo Downloading j release bundle...
 
-version="v1.0.6"
+version="v1.0.7"
 curl -s -L -o /tmp/j.tar.gz https://github.com/makkes/j/releases/download/${version}/j_${version}_"$(uname -o|sed 's/^GNU\///'|awk '{print tolower($0)}')"_"$(uname -m)".tar.gz || rollback_and_exit 1
 mkdir ~/.j || exit 1
 tar -C ~/.j -xzf /tmp/j.tar.gz || rollback_and_exit 1
