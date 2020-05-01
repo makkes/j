@@ -26,6 +26,9 @@ func writeHistory(history map[string]int) error {
 func readHistory() (map[string]int, j.JumpFile, error) {
 	jumpBytes, err := ioutil.ReadFile(os.Getenv("HOME") + "/.jump.json")
 	if err != nil {
+		if os.IsNotExist(err) {
+			return map[string]int{}, nil, nil
+		}
 		return nil, nil, err
 	}
 	var jumpFileMap map[string]int
