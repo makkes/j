@@ -108,13 +108,20 @@ func (m MatchResult) Less(i int, j int) bool {
 	if m.Matches[j].Priority && !m.Matches[i].Priority {
 		return false
 	}
-	if strings.HasSuffix(m.Matches[j].Path, m.Query) {
-		if strings.HasSuffix(m.Matches[i].Path, m.Query) {
-			return m.Matches[i].Freq > m.Matches[j].Freq
+
+	if strings.HasSuffix(m.Matches[i].Path, m.Query) {
+		if strings.HasSuffix(m.Matches[j].Path, m.Query) {
+			return m.Matches[i].Score > m.Matches[j].Score
 		}
-		return false
+		return true
 	}
-	return strings.HasSuffix(m.Matches[i].Path, m.Query) || m.Matches[i].Freq > m.Matches[j].Freq
+
+	if m.Matches[i].Score == m.Matches[j].Score {
+		return m.Matches[i].Freq > m.Matches[j].Freq
+	}
+
+	return m.Matches[i].Score > m.Matches[j].Score
+
 }
 
 // Swap swaps the elements with indexes i and j.

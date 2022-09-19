@@ -14,6 +14,26 @@ func TestMatching(t *testing.T) {
 		res      MatchResult
 	}{
 		{
+			name: "better score always ranks higher",
+			jumpFile: JumpFile{
+				JumpFileEntry{
+					Path: "/home/max/dev/weaveworks/cluster-bootstrap-controller",
+					Freq: 8,
+				},
+				JumpFileEntry{
+					Path: "/home/max/dev/weaveworks/cluster-controller",
+					Freq: 5,
+				},
+			},
+			query: "cluster-c",
+			res: MatchResult{
+				Matches: []*Match{
+					{Path: "/home/max/dev/weaveworks/cluster-controller"},
+					{Path: "/home/max/dev/weaveworks/cluster-bootstrap-controller"},
+				},
+			},
+		},
+		{
 			name: "two matching suffixes",
 			jumpFile: JumpFile{
 				JumpFileEntry{
@@ -28,12 +48,8 @@ func TestMatching(t *testing.T) {
 			query: "playground",
 			res: MatchResult{
 				Matches: []*Match{
-					&Match{
-						Path: "/Users/tester/dev/testing/playground",
-					},
-					&Match{
-						Path: "/Users/tester/dev/playground",
-					},
+					{Path: "/Users/tester/dev/playground"},
+					{Path: "/Users/tester/dev/testing/playground"},
 				},
 			},
 		},
@@ -52,36 +68,8 @@ func TestMatching(t *testing.T) {
 			query: "playground",
 			res: MatchResult{
 				Matches: []*Match{
-					&Match{
-						Path: "/Users/tester/dev/playground",
-					},
-					&Match{
-						Path: "/Users/playground/whateva",
-					},
-				},
-			},
-		},
-		{
-			name: "frequency wins",
-			jumpFile: JumpFile{
-				JumpFileEntry{
-					Path: "/a/path/to/thissuper/dir",
-					Freq: 5,
-				},
-				JumpFileEntry{
-					Path: "/a/path/to/another/super/dir",
-					Freq: 25,
-				},
-			},
-			query: "super",
-			res: MatchResult{
-				Matches: []*Match{
-					&Match{
-						Path: "/a/path/to/another/super/dir",
-					},
-					&Match{
-						Path: "/a/path/to/thissuper/dir",
-					},
+					{Path: "/Users/tester/dev/playground"},
+					{Path: "/Users/playground/whateva"},
 				},
 			},
 		},

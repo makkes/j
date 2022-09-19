@@ -1,6 +1,7 @@
 BINARY_NAME := jump
 VERSION := $(shell git describe --tags $(git rev-parse HEAD))
 PLATFORMS := linux darwin
+TEST_FLAGS ?= ""
 os = $(word 1, $@)
 
 .PHONY: build
@@ -9,7 +10,7 @@ build:
 
 .PHONY: test
 test:
-	go test -v ./...
+	go test $(TEST_FLAGS) -v ./...
 
 .PHONY: $(PLATFORMS)
 $(PLATFORMS):
