@@ -111,6 +111,9 @@ func (m MatchResult) Less(i int, j int) bool {
 
 	if strings.HasSuffix(m.Matches[i].Path, m.Query) {
 		if strings.HasSuffix(m.Matches[j].Path, m.Query) {
+			if m.Matches[i].Freq > m.Matches[j].Freq {
+				return true
+			}
 			return m.Matches[i].Score > m.Matches[j].Score
 		}
 		return true

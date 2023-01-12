@@ -14,6 +14,26 @@ func TestMatching(t *testing.T) {
 		res      MatchResult
 	}{
 		{
+			name: "matches with same suffix are ranked by frequency",
+			jumpFile: JumpFile{
+				JumpFileEntry{
+					Path: "/home/max/dev/weaveworks/weave-gitops",
+					Freq: 55,
+				},
+				JumpFileEntry{
+					Path: "/home/max/private/e13/infra/weave-gitops",
+					Freq: 36,
+				},
+			},
+			query: "weave-gitops",
+			res: MatchResult{
+				Matches: []*Match{
+					{Path: "/home/max/dev/weaveworks/weave-gitops"},
+					{Path: "/home/max/private/e13/infra/weave-gitops"},
+				},
+			},
+		},
+		{
 			name: "better score always ranks higher",
 			jumpFile: JumpFile{
 				JumpFileEntry{
@@ -30,26 +50,6 @@ func TestMatching(t *testing.T) {
 				Matches: []*Match{
 					{Path: "/home/max/dev/weaveworks/cluster-controller"},
 					{Path: "/home/max/dev/weaveworks/cluster-bootstrap-controller"},
-				},
-			},
-		},
-		{
-			name: "two matching suffixes",
-			jumpFile: JumpFile{
-				JumpFileEntry{
-					Path: "/Users/tester/dev/playground",
-					Freq: 5,
-				},
-				JumpFileEntry{
-					Path: "/Users/tester/dev/testing/playground",
-					Freq: 25,
-				},
-			},
-			query: "playground",
-			res: MatchResult{
-				Matches: []*Match{
-					{Path: "/Users/tester/dev/playground"},
-					{Path: "/Users/tester/dev/testing/playground"},
 				},
 			},
 		},
