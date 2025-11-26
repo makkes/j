@@ -1,6 +1,7 @@
 package j
 
 import (
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -13,6 +14,28 @@ func TestMatching(t *testing.T) {
 		query    string
 		res      MatchResult
 	}{
+		{
+			name:  "prefix dir match",
+			query: "dir",
+			res: MatchResult{
+				Matches: Matches{
+					&Match{
+						Path: "dir-a/",
+					},
+				},
+			},
+		},
+		{
+			name:  "prefix symlink match",
+			query: "s",
+			res: MatchResult{
+				Matches: Matches{
+					&Match{
+						Path: "sym-a/",
+					},
+				},
+			},
+		},
 		{
 			name: "matches with same suffix are ranked by frequency",
 			jumpFile: JumpFile{
@@ -77,6 +100,19 @@ func TestMatching(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			oldWd, err := os.Getwd()
+			if err != nil {
+				t.Fatalf("Getwd: %v", err)
+			}
+			t.Cleanup(func() {
+				if err := os.Chdir(oldWd); err != nil {
+					t.Fatalf("failed changing back to the old WD: %s", err)
+				}
+			})
+
+			if err := os.Chdir("testdata"); err != nil {
+				t.Fatalf("Chdir: %v", err)
+			}
 			jumper := NewJumper(func(j *Jumper) {
 				j.dirExists = func(p string) bool {
 					return p != tt.query

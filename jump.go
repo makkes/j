@@ -32,12 +32,16 @@ func NewJumper(opts ...Opt) Jumper {
 			if err != nil {
 				return ""
 			}
-			fis, err := ioutil.ReadDir(wd)
+			fis, err := os.ReadDir(wd)
 			if err != nil {
 				return ""
 			}
 			for _, fi := range fis {
-				if fi.IsDir() && strings.HasPrefix(fi.Name(), p) {
+				info, err := os.Stat(fi.Name())
+				if err != nil {
+					return ""
+				}
+				if info.IsDir() && strings.HasPrefix(fi.Name(), p) {
 					return fi.Name()
 				}
 			}
