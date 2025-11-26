@@ -84,7 +84,7 @@ func main() {
 			if *debug {
 				fmt.Printf("%d %d %s\n", match.Freq, match.Score, match.Path)
 			} else {
-				fmt.Printf("%0*d %s\n", len(strconv.Itoa(matchResult.Len()))-1, idx, match.Path)
+				fmt.Printf("%0*d %s\n", len(strconv.Itoa(matchResult.Len())), idx, match.Path)
 			}
 		}
 	} else {
